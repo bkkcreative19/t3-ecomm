@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://kris:basketball10@localhost:5432/kris-db?schema=public"
+  url      = "postgres://ecomm_yay_user:bAYMEW3eAFfFMb4riKl2pgsHr2aXcMDg@dpg-ceov1g4gqg4ekmf6eueg-a.oregon-postgres.render.com/ecomm_yay"
 }
 
 model Account {
