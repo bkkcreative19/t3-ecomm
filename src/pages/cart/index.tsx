@@ -1,9 +1,9 @@
 import React from "react";
-import axios from "axios";
+
 import type { NextPage } from "next";
-import { useStore } from "../../store";
+
 import { Layout } from "../../features/ui/layout";
-import { CartItem } from "../../features/cart/components/cart-item";
+// import { CartItem } from "../../features/cart/components/cart-item";
 import styled from "styled-components";
 import Link from "next/link";
 
@@ -55,25 +55,23 @@ const Subtotal = styled.div`
 `;
 
 const CartPage: NextPage = () => {
-  const { cart, cartTotal } = useStore();
+  // const handleCheckout = async () => {
+  //   const { data } = await axios.post(
+  //     "http://localhost:5000/create-checkout-session",
+  //     {
+  //       cartItems: cart,
+  //     }
+  //   );
 
-  const handleCheckout = async () => {
-    const { data } = await axios.post(
-      "http://localhost:5000/create-checkout-session",
-      {
-        cartItems: cart,
-      }
-    );
-
-    if (data.url) {
-      window.location.href = data.url;
-    }
-  };
+  //   if (data.url) {
+  //     window.location.href = data.url;
+  //   }
+  // };
 
   return (
     <>
       <Layout>
-        <CartContainer>
+        {/* <CartContainer>
           <Head>Shopping Cart</Head>
 
           <CartItems>
@@ -92,7 +90,7 @@ const CartPage: NextPage = () => {
           <Link href="/products">
             <ContinueButton>Continue Shopping</ContinueButton>
           </Link>
-        </CartContainer>
+        </CartContainer> */}
       </Layout>
     </>
   );
