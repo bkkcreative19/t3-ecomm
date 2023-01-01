@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useStore } from "../../../../store";
+
 import { CartItemTypes } from "./types/cart-item";
 
 const CartItemStyles = styled.div`
@@ -48,12 +48,9 @@ const Remove = styled.p`
 `;
 
 export function CartItem({ cartItem }: any) {
-  const { rewmoveFromCart, increaseQty, decreaseQty, cart, updateCartTotal } =
-    useStore();
-
   return (
     <CartItemStyles>
-      <Image src={cartItem.imageURL} />
+      {/* <Image src={cartItem.imageURL} />
       <Title>{cartItem.title}</Title>
       <Price>${cartItem.price}.99</Price>
       <Qty>
@@ -88,7 +85,7 @@ export function CartItem({ cartItem }: any) {
         }}
       >
         Remove x
-      </Remove>
+      </Remove> */}
     </CartItemStyles>
   );
 }
