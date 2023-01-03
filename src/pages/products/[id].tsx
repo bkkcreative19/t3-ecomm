@@ -3,11 +3,32 @@ import { Layout } from "../../features/ui/layout";
 
 import { useRouter } from "next/router";
 import { ProductInfo } from "../../features/product/components/product-info";
+import { trpc } from "../../utils/trpc";
 
 export default function ProductDetails() {
   const router = useRouter();
+  const query: string = router.query.id as string;
+  const createCartMutation = trpc.cart.createCart.useMutation();
+  const createCartItemMutation = trpc.cart.createCartItem.useMutation();
+
+  const { data: product } = trpc.product.getProductByTitle.useQuery(query);
+
+  const handleAddToCart = async () => {
+    // console.log("yay");
+
+    // const res = await createCartMutation.mutateAsync("awf");
+    await createCartItemMutation.mutateAsync({
+      productId: product?.id,
+    });
+    // console.log(res);
+  };
+  // console.log(product);
 
   // const { data } = useProduct(router.query.id);
 
-  return <>agfs</>;
+  return (
+    <>
+      <ProductInfo handleAddToCart={handleAddToCart} data={product} />
+    </>
+  );
 }

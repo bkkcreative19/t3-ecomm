@@ -54,6 +54,16 @@ const Options = styled.div`
 const LoginRegister = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
+  gap: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #b73225;
+`;
+
+const Profile = styled.div`
+  display: flex;
+  align-items: center;
 
   gap: 5px;
   font-weight: 700;
@@ -66,6 +76,7 @@ const SearchIcon = styled(BsSearch)`
 `;
 
 export function Header() {
+  const { data: session } = useSession();
   return (
     <HeaderStyles>
       <Layout>
@@ -87,11 +98,17 @@ export function Header() {
             <ListItem>Contact</ListItem>
           </NavList>
           <Options>
-            <Link href="/login">
-              <LoginRegister>
+            {session ? (
+              <Link href="/profile">
+                <Profile>
+                  <CiUser /> {session && session.user?.name}
+                </Profile>
+              </Link>
+            ) : (
+              <LoginRegister onClick={() => signIn()}>
                 <CiUser /> Login / Register
               </LoginRegister>
-            </Link>
+            )}
 
             <SearchIcon size={"1.7rem"} color="#B73225" />
             <Link href="/cart">

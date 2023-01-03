@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { trpc } from "../../../../utils/trpc";
 
 import { CartItemTypes } from "./types/cart-item";
 
@@ -47,45 +48,43 @@ const Remove = styled.p`
   font-size: 1.4rem;
 `;
 
-export function CartItem({ cartItem }: any) {
+export function CartItem({ cartItem, qty, id }: any) {
+  const utils = trpc.useContext();
+  const addQuantityMutation = trpc.cart.addQuantity.useMutation({});
+  const minusQuantityMutation = trpc.cart.minusQuantity.useMutation();
+  // const handleCheckout = async () => {
+  //   const { data } = await axios.post(
+  //     "http://localhost:5000/create-checkout-session",
+  //     {
+  //       cartItems: cart,
+  //     }
+  //   );
+
+  const handleUpdateQty = async (id: any, op: string) => {
+    if (op === "add") {
+      await addQuantityMutation.mutateAsync(id);
+    } else {
+      await minusQuantityMutation.mutateAsync(id);
+    }
+    utils.cart.invalidate();
+  };
+
   return (
     <CartItemStyles>
-      {/* <Image src={cartItem.imageURL} />
+      <Image src={cartItem.imageURL} />
       <Title>{cartItem.title}</Title>
       <Price>${cartItem.price}.99</Price>
       <Qty>
-        <div
-          onClick={() => {
-            if (cartItem.qty === 1) {
-              rewmoveFromCart(cartItem);
-            } else {
-              decreaseQty(cartItem);
-            }
-
-            updateCartTotal();
-          }}
-        >
-          -
-        </div>
-        <p>{cartItem.qty}</p>
-        <div
-          onClick={() => {
-            increaseQty(cartItem);
-            updateCartTotal();
-          }}
-        >
-          +
-        </div>
+        <div onClick={() => handleUpdateQty(id, "subtract")}>-</div>
+        <p>
+          {addQuantityMutation.isLoading || minusQuantityMutation.isLoading
+            ? "...loading"
+            : qty}
+        </p>
+        <div onClick={() => handleUpdateQty(id, "add")}>+</div>
       </Qty>
-      <Subtotal>${cartItem.price * cartItem.qty}.99</Subtotal>
-      <Remove
-        onClick={() => {
-          rewmoveFromCart(cartItem);
-          updateCartTotal();
-        }}
-      >
-        Remove x
-      </Remove> */}
+      <Subtotal>${cartItem.price * qty}.99</Subtotal>
+      <Remove>Remove x</Remove>
     </CartItemStyles>
   );
 }

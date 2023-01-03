@@ -4,7 +4,7 @@ import { PageContainer } from "../../features/ui/page-container";
 import { ProductList } from "../../features/product/components/project-list";
 import { Filters } from "../../features/product/components/filters";
 import { BsChevronRight } from "react-icons/bs";
-
+import { useSession } from "next-auth/react";
 import styled from "styled-components";
 import { Layout } from "../../features/ui/layout";
 import { useState } from "react";
@@ -83,6 +83,8 @@ const ProductPage: NextPage = () => {
   const [prices, setPrices] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
 
+  const { data: session } = useSession();
+
   const changeSearch = (value: any) => {
     setSearch(value);
   };
@@ -113,7 +115,7 @@ const ProductPage: NextPage = () => {
     }
   };
 
-  console.log(sortBy);
+  console.log(session);
 
   return (
     <>

@@ -139,22 +139,16 @@ const Button = styled.button`
   color: #ffffff;
 `;
 
-export function ProductInfo({ data }: ProductInfoProps) {
-  const product = data[0];
+export function ProductInfo({ data, handleAddToCart }: any) {
+  const product = data;
   // const { addToCart, updateCartTotal } = useStore();
-
-  const handleAddToCart = () => {
-    const newProduct = { ...product, qty: 1 };
-    // addToCart(newProduct);
-    // updateCartTotal();
-  };
 
   if (!product) {
     return <h1>loading...</h1>;
   }
   return (
     <ProductInfoStyles>
-      <ImageContainer imageSrc={product.DetailimageURL}></ImageContainer>
+      <ImageContainer imageSrc={product.imageURL}></ImageContainer>
       <Content>
         <Title>{product.title}</Title>
         <Rating>

@@ -30,4 +30,14 @@ export const productRouter = router({
         },
       });
     }),
+
+  getProductByTitle: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.product.findFirst({
+        where: {
+          title: input,
+        },
+      });
+    }),
 });

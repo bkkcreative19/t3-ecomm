@@ -3,9 +3,11 @@ import React from "react";
 import type { NextPage } from "next";
 
 import { Layout } from "../../features/ui/layout";
-// import { CartItem } from "../../features/cart/components/cart-item";
+import { CartItem } from "../../features/cart/components/cart-item";
 import styled from "styled-components";
 import Link from "next/link";
+import { trpc } from "../../utils/trpc";
+import { ClipLoader } from "react-spinners";
 
 const CartContainer = styled.div`
   margin-top: 10rem;
@@ -54,43 +56,67 @@ const Subtotal = styled.div`
   margin: 3rem 0;
 `;
 
-const CartPage: NextPage = () => {
-  // const handleCheckout = async () => {
-  //   const { data } = await axios.post(
-  //     "http://localhost:5000/create-checkout-session",
-  //     {
-  //       cartItems: cart,
-  //     }
-  //   );
+const LoadingContainer = styled.div`
+  display: flex;
+  width: 100%;
 
-  //   if (data.url) {
-  //     window.location.href = data.url;
-  //   }
-  // };
+  & span {
+    margin: 0 auto;
+    margin-top: 5rem;
+  }
+`;
+
+const CartPage: NextPage = () => {
+  const { data: cart, isLoading } = trpc.cart.getCart.useQuery();
+
+  const deleteCartMutation = trpc.cart.deleteCart.useMutation();
+
+  console.log(cart);
+
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <ClipLoader
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </LoadingContainer>
+    );
+  }
+
+  if (!cart) {
+    return <Layout>add items nigga</Layout>;
+  }
 
   return (
     <>
       <Layout>
-        {/* <CartContainer>
+        <CartContainer>
           <Head>Shopping Cart</Head>
 
           <CartItems>
-            {cart.map((item) => {
-              return <CartItem key={item.id} cartItem={item} />;
+            {cart?.cartItems.map((item) => {
+              return (
+                <CartItem
+                  key={item.id}
+                  id={item.id}
+                  cartItem={item.product}
+                  qty={item.quantity}
+                />
+              );
             })}
           </CartItems>
           <Subtotal>
             <p>Subtotal:</p>
-            <p>${cartTotal}</p>
+            <p>${cart?.total}</p>
           </Subtotal>
 
-          <CheckoutButton onClick={handleCheckout} color="red">
-            Checkout
-          </CheckoutButton>
+          <CheckoutButton color="red">Checkout</CheckoutButton>
           <Link href="/products">
             <ContinueButton>Continue Shopping</ContinueButton>
           </Link>
-        </CartContainer> */}
+        </CartContainer>
       </Layout>
     </>
   );
