@@ -11,6 +11,7 @@ type PageContainerProps = {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 5rem;
 `;
 
 const Main = styled.main`

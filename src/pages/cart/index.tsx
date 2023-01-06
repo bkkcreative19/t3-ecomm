@@ -8,6 +8,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import { ClipLoader } from "react-spinners";
+import { loadStripe } from "@stripe/stripe-js";
 
 const CartContainer = styled.div`
   margin-top: 10rem;
@@ -69,9 +70,39 @@ const LoadingContainer = styled.div`
 const CartPage: NextPage = () => {
   const { data: cart, isLoading } = trpc.cart.getCart.useQuery();
 
-  const deleteCartMutation = trpc.cart.deleteCart.useMutation();
+  const checkoutMutation = trpc.stripe.createCheckout.useMutation();
 
-  console.log(cart);
+  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  const stripePromise = loadStripe(
+    "pk_test_51KsrI3Lojhc6RaULZKaZj1Hum7EV4anQSc0wo1vsEhiD89exzit12f3lG3HSM5SNJQug4qqnB4re0FMkd1NB2RLx00eDaJDRuq"
+  );
+
+  const handleCheckout = async () => {
+    const stripe = await stripePromise;
+    const session = await checkoutMutation.mutateAsync(cart);
+
+    const result = await stripe?.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result?.error) {
+      alert(result?.error.message);
+    }
+  };
+
+  // const handleCheckout = async () => {
+
+  //   ;
+  // };
+
+  let total = 0;
+
+  cart?.cartItems.forEach((item) => {
+    const productPrice = item.product.price as number;
+
+    total = total + productPrice * item.quantity!;
+  });
+  console.log(total);
 
   if (isLoading) {
     return (
@@ -86,7 +117,7 @@ const CartPage: NextPage = () => {
   }
 
   if (!cart) {
-    return <Layout>add items nigga</Layout>;
+    return <Layout>add items to cart</Layout>;
   }
 
   return (
@@ -109,10 +140,12 @@ const CartPage: NextPage = () => {
           </CartItems>
           <Subtotal>
             <p>Subtotal:</p>
-            <p>${cart?.total}</p>
+            <p>${total.toFixed(2)}</p>
           </Subtotal>
 
-          <CheckoutButton color="red">Checkout</CheckoutButton>
+          <CheckoutButton color="red" onClick={handleCheckout}>
+            Checkout
+          </CheckoutButton>
           <Link href="/products">
             <ContinueButton>Continue Shopping</ContinueButton>
           </Link>

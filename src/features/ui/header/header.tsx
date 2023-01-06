@@ -3,8 +3,10 @@ import React from "react";
 import { Layout } from "../layout";
 import { CiUser } from "react-icons/ci";
 import { BsSearch, BsCart } from "react-icons/bs";
+
 import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { trpc } from "../../../utils/trpc";
 
 const HeaderStyles = styled.header``;
 
@@ -77,6 +79,11 @@ const SearchIcon = styled(BsSearch)`
 
 export function Header() {
   const { data: session } = useSession();
+
+  // const { data } = trpc.cart.getCartTotal.useQuery();
+
+  // console.log(data);
+
   return (
     <HeaderStyles>
       <Layout>

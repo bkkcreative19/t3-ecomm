@@ -1,11 +1,8 @@
 import Head from "next/head";
-import Image from "next/image";
+
 // import { Inter } from "@next/font/google";
 import Link from "next/link";
 import styled from "styled-components";
-import { Layout } from "../features/ui/layout";
-
-import { trpc } from "../utils/trpc";
 
 const Hero = styled.section`
   height: 80vh;

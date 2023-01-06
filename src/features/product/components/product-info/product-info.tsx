@@ -14,7 +14,6 @@ const ProductInfoStyles = styled.div`
   height: 100vh;
   display: flex;
 
-  background: #fafafa;
   padding: 8rem 0;
 `;
 

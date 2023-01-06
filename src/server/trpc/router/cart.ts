@@ -51,6 +51,8 @@ export const cartRouter = router({
           },
         });
 
+        console.log(cart);
+
         if (cart) {
           await ctx.prisma.cartItem.create({
             data: {
@@ -111,6 +113,28 @@ export const cartRouter = router({
         }, // All posts where authorId == 20
       },
     });
+  }),
+
+  getCartTotal: publicProcedure.query(async ({ ctx }) => {
+    let total;
+
+    const cartItems = await ctx.prisma.cart.findFirst({
+      where: {
+        userId: ctx.session?.user?.id,
+      },
+
+      include: {
+        cartItems: {
+          include: {
+            product: true,
+          },
+        }, // All posts where authorId == 20
+      },
+    });
+
+    console.log(cartItems);
+
+    return total;
   }),
 
   addQuantity: publicProcedure

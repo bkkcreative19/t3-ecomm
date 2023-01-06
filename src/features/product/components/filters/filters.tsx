@@ -18,7 +18,6 @@ const InputContainer = styled.div`
   padding: 1.6rem 2rem;
   display: flex;
 
-  gap: 15px;
   align-items: center;
   justify-content: space-between;
   background: #f5f5f5;
@@ -29,7 +28,7 @@ const Input = styled.input`
   border: none;
   font-weight: 400;
   background: transparent;
-  width: 80%;
+  width: 86%;
   &:focus {
     border: none;
     outline: none;

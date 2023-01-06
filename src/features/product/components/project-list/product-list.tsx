@@ -17,7 +17,7 @@ const ProductListStyles = styled.div<Props>`
   display: grid;
   grid-template-columns: ${(p) =>
     p.view === "grid" ? "repeat(auto-fill, minmax(240px, 1fr))" : "1fr"};
-  gap: ${(p) => (p.view === "list" ? "5.5rem" : "2.5rem")};
+  gap: ${(p) => (p.view === "list" ? "7.5rem" : "3.5rem")};
 
   @media (max-width: 750px) {
     grid-template-columns: repeat(1, 1fr);
@@ -94,6 +94,17 @@ const Icon = styled.div`
 `;
 const SelectContainer = styled.select`
   width: 191px;
+  background: #f9f9f9;
+  padding: 1.5rem;
+  font-size: 14px;
+  line-height: 28px;
+  /* identical to box height, or 200% */
+
+  letter-spacing: 0.2px;
+
+  /* second-text-color */
+
+  color: #737373;
 `;
 
 const LoadingContainer = styled.div`
@@ -166,8 +177,6 @@ export function ProductList({
         >
           <option value="desc">Price: high to low</option>
           <option value="asc">Price: low to high </option>
-
-          <option value="hi2">hi2</option>
         </SelectContainer>
       </ToolBar>
       <ProductListStyles view={view}>
@@ -178,67 +187,3 @@ export function ProductList({
     </Container>
   );
 }
-
-// const filterProducts = (filter: string[], products: any) => {
-//   let newFilters = filter.map((filter) => filter.toLowerCase());
-
-//   if (filter.length !== 0) {
-//     let newProducts = products.filter((item: any) =>
-//       newFilters.includes(item.category)
-//     );
-//     return newProducts;
-//   } else {
-//     return products;
-//   }
-// };
-
-// const filterPrice = (filter: string[], products: any) => {
-//   let test: any = filter
-// .map((item) =>
-//   item.split("-").map((item) => Number(item.slice(1).replaceAll(",", "")))
-// )
-// .flat();
-
-//   if (filter.length !== 0) {
-//     let newProducts = products.filter(
-//       (item: any) =>
-//         item.price >= test[0] && item.price <= test[test.length - 1]
-//     );
-//     return newProducts;
-//   } else {
-//     return products;
-//   }
-// };
-
-// const sortProducts = (sortBy: string, products: ProductTypes[]) => {
-//   let sortedArr: ProductTypes[] = [];
-//   if (products) {
-//     sortedArr = [...products];
-//   }
-
-//   if (sortBy === "high-to-low") {
-//     sortedArr.sort((a, b) => b.price - a.price);
-//   } else if (sortBy === "low-to-high") {
-//     sortedArr.sort((a, b) => a.price - b.price);
-//   } else {
-//     return products;
-//   }
-
-//   return sortedArr;
-// };
-
-// const filterSearch = (search: string, products: ProductTypes[]) => {
-//   let test;
-
-//   if (search) {
-//     test = products.filter((item) => {
-//       return search.toLowerCase() === ""
-//         ? item
-//         : item.title.toLowerCase().includes(search.toLowerCase());
-//     });
-//   } else {
-//     return products;
-//   }
-
-//   return test;
-// };

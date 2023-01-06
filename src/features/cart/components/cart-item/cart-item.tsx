@@ -73,7 +73,7 @@ export function CartItem({ cartItem, qty, id }: any) {
     <CartItemStyles>
       <Image src={cartItem.imageURL} />
       <Title>{cartItem.title}</Title>
-      <Price>${cartItem.price}.99</Price>
+      <Price>${cartItem.price.toFixed(2)}</Price>
       <Qty>
         <div onClick={() => handleUpdateQty(id, "subtract")}>-</div>
         <p>
@@ -83,7 +83,7 @@ export function CartItem({ cartItem, qty, id }: any) {
         </p>
         <div onClick={() => handleUpdateQty(id, "add")}>+</div>
       </Qty>
-      <Subtotal>${cartItem.price * qty}.99</Subtotal>
+      <Subtotal>${(cartItem.price * qty).toFixed(2)}</Subtotal>
       <Remove>Remove x</Remove>
     </CartItemStyles>
   );
