@@ -34,7 +34,6 @@ export const stripeRouter = router({
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
           : "https://t3-ecomm-kelb-eu3t6xonl-bkkcreative19.vercel.app";
-      console.log(lineItems);
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],

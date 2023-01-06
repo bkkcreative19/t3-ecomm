@@ -5,6 +5,10 @@ import { Layout } from "../layout";
 const BannerStyles = styled.div`
   background: #004e7c;
   padding: 1.5rem 0;
+
+  @media (max-width: 750px) {
+    display: none;
+  }
 `;
 
 const Yay = styled.p`

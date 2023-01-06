@@ -12,6 +12,10 @@ import { loadStripe } from "@stripe/stripe-js";
 
 const CartContainer = styled.div`
   margin-top: 10rem;
+
+  @media (max-width: 750px) {
+    margin-top: 4rem;
+  }
 `;
 
 const Head = styled.h2`
@@ -35,6 +39,10 @@ const Button = styled.button`
   margin-top: 1.5rem;
   margin-left: auto;
   cursor: pointer;
+
+  @media (max-width: 750px) {
+    width: 100%;
+  }
 `;
 
 const CheckoutButton = styled(Button)`
@@ -102,7 +110,6 @@ const CartPage: NextPage = () => {
 
     total = total + productPrice * item.quantity!;
   });
-  console.log(total);
 
   if (isLoading) {
     return (

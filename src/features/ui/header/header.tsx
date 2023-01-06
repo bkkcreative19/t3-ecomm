@@ -1,12 +1,14 @@
 import styled from "styled-components";
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "../layout";
 import { CiUser } from "react-icons/ci";
 import { BsSearch, BsCart } from "react-icons/bs";
+import { MdOutlineSort } from "react-icons/md";
 
 import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { trpc } from "../../../utils/trpc";
+import { MobileHeader } from "./mobile-header";
 
 const HeaderStyles = styled.header``;
 
@@ -33,6 +35,10 @@ const NavList = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
+
+  @media (max-width: 750px) {
+    display: none;
+  }
 `;
 
 const ListItem = styled.div`
@@ -51,6 +57,10 @@ const ListItem = styled.div`
 const Options = styled.div`
   display: flex;
   align-items: center;
+
+  @media (max-width: 750px) {
+    display: none;
+  }
 `;
 
 const LoginRegister = styled.div`
@@ -80,6 +90,8 @@ const SearchIcon = styled(BsSearch)`
 export function Header() {
   const { data: session } = useSession();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   // const { data } = trpc.cart.getCartTotal.useQuery();
 
   // console.log(data);
@@ -91,6 +103,8 @@ export function Header() {
           <Link href="/">
             <Logo>Solreck</Logo>
           </Link>
+
+          <MdOutlineSort onClick={() => setIsOpen(!isOpen)} size={"2.5rem"} />
 
           <NavList>
             <Link href="/">
@@ -123,6 +137,7 @@ export function Header() {
             </Link>
           </Options>
         </HeaderContainer>
+        {isOpen && <MobileHeader />}
       </Layout>
     </HeaderStyles>
   );

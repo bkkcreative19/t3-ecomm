@@ -9,7 +9,6 @@ const CartItemStyles = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem 0;
-  justify-content: space-between;
 `;
 
 const Image = styled.img`
@@ -48,6 +47,18 @@ const Remove = styled.p`
   font-size: 1.4rem;
 `;
 
+const Content = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+
+  @media (max-width: 750px) {
+    flex-direction: column;
+    align-items: start;
+  }
+`;
+
 export function CartItem({ cartItem, qty, id }: any) {
   const utils = trpc.useContext();
   const addQuantityMutation = trpc.cart.addQuantity.useMutation({});
@@ -72,19 +83,22 @@ export function CartItem({ cartItem, qty, id }: any) {
   return (
     <CartItemStyles>
       <Image src={cartItem.imageURL} />
-      <Title>{cartItem.title}</Title>
-      <Price>${cartItem.price.toFixed(2)}</Price>
-      <Qty>
-        <div onClick={() => handleUpdateQty(id, "subtract")}>-</div>
-        <p>
-          {addQuantityMutation.isLoading || minusQuantityMutation.isLoading
-            ? "...loading"
-            : qty}
-        </p>
-        <div onClick={() => handleUpdateQty(id, "add")}>+</div>
-      </Qty>
-      <Subtotal>${(cartItem.price * qty).toFixed(2)}</Subtotal>
-      <Remove>Remove x</Remove>
+      <Content>
+        {" "}
+        <Title>{cartItem.title}</Title>
+        <Price>${cartItem.price.toFixed(2)}</Price>
+        <Qty>
+          <div onClick={() => handleUpdateQty(id, "subtract")}>-</div>
+          <p>
+            {addQuantityMutation.isLoading || minusQuantityMutation.isLoading
+              ? "...loading"
+              : qty}
+          </p>
+          <div onClick={() => handleUpdateQty(id, "add")}>+</div>
+        </Qty>
+        <Subtotal>${(cartItem.price * qty).toFixed(2)}</Subtotal>
+        <Remove>Remove x</Remove>
+      </Content>
     </CartItemStyles>
   );
 }
