@@ -30,7 +30,7 @@ export const stripeRouter = router({
       const redirectURL =
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
-          : "https://t3-ecomm-kelb-eu3t6xonl-bkkcreative19.vercel.app";
+          : "https://kris-ecomm.vercel.app";
 
       const session: any = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
