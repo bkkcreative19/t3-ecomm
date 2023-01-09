@@ -7,12 +7,9 @@ export const stripeRouter = router({
   createCheckout: publicProcedure
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
-      const stripe = new Stripe(
-        "sk_test_51KsrI3Lojhc6RaUL1tjZKe79wdB90glSQikDS3FnhsSYpLFVYcXQGpTC2mHG15X0sFmjqSigyDeZpOxV7A8qCwvi00Sqd8fjmO",
-        {
-          apiVersion: null,
-        }
-      );
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+        apiVersion: "2022-11-15",
+      });
       const lineItems = input.cartItems.map((item: any) => {
         const transformedItem = {
           price_data: {
@@ -35,7 +32,7 @@ export const stripeRouter = router({
           ? "http://localhost:3000"
           : "https://t3-ecomm-kelb-eu3t6xonl-bkkcreative19.vercel.app";
 
-      const session = await stripe.checkout.sessions.create({
+      const session: any = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "payment",

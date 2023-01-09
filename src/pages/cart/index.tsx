@@ -80,10 +80,9 @@ const CartPage: NextPage = () => {
 
   const checkoutMutation = trpc.stripe.createCheckout.useMutation();
 
-  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-  const stripePromise = loadStripe(
-    "pk_test_51KsrI3Lojhc6RaULZKaZj1Hum7EV4anQSc0wo1vsEhiD89exzit12f3lG3HSM5SNJQug4qqnB4re0FMkd1NB2RLx00eDaJDRuq"
-  );
+  const publishableKey = process.env
+    .NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string;
+  const stripePromise = loadStripe(publishableKey);
 
   const handleCheckout = async () => {
     const stripe = await stripePromise;
