@@ -39,7 +39,7 @@ export const stripeRouter = router({
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "payment",
-        success_url: redirectURL + "?status=success",
+        success_url: redirectURL + "/profile",
         cancel_url: redirectURL + "?status=cancel",
       });
       // const params: Stripe.Checkout.SessionCreateParams = {

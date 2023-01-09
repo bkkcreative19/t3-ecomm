@@ -6,9 +6,10 @@ import { BsSearch, BsCart } from "react-icons/bs";
 import { MdOutlineSort } from "react-icons/md";
 
 import Link from "next/link";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { trpc } from "../../../utils/trpc";
 import { MobileHeader } from "./mobile-header";
+import { Dropdown } from "./dropdown";
 
 const HeaderStyles = styled.header``;
 
@@ -74,9 +75,10 @@ const LoginRegister = styled.div`
 `;
 
 const Profile = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
-
+  cursor: pointer;
   gap: 5px;
   font-weight: 700;
   font-size: 14px;
@@ -87,10 +89,20 @@ const SearchIcon = styled(BsSearch)`
   margin: 0 20px;
 `;
 
+const HamburgerMenu = styled(MdOutlineSort)`
+  display: none;
+  cursor: pointer;
+
+  @media (max-width: 750px) {
+    display: flex;
+  }
+`;
+
 export function Header() {
   const { data: session } = useSession();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropdown, setIsDropdown] = useState(false);
 
   // const { data } = trpc.cart.getCartTotal.useQuery();
 
@@ -104,7 +116,7 @@ export function Header() {
             <Logo>Solreck</Logo>
           </Link>
 
-          <MdOutlineSort onClick={() => setIsOpen(!isOpen)} size={"2.5rem"} />
+          <HamburgerMenu onClick={() => setIsOpen(!isOpen)} size={"2.5rem"} />
 
           <NavList>
             <Link href="/">
@@ -120,11 +132,10 @@ export function Header() {
           </NavList>
           <Options>
             {session ? (
-              <Link href="/profile">
-                <Profile>
-                  <CiUser /> {session && session.user?.name}
-                </Profile>
-              </Link>
+              <Profile onClick={() => setIsDropdown(!isDropdown)}>
+                <CiUser /> {session && session.user?.name}
+                {isDropdown && <Dropdown />}
+              </Profile>
             ) : (
               <LoginRegister onClick={() => signIn()}>
                 <CiUser /> Login / Register

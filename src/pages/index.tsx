@@ -7,6 +7,7 @@ import styled from "styled-components";
 const Hero = styled.section`
   height: 80vh;
   display: flex;
+  position: relative;
 `;
 const Left = styled.div`
   flex: 2;
@@ -21,6 +22,13 @@ const Left = styled.div`
 const Content = styled.div`
   width: 60%;
 
+  @media (max-width: 750px) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
   & h1 {
     font-weight: 700;
     font-size: 70px;
@@ -32,6 +40,10 @@ const Content = styled.div`
     /* text-color */
 
     color: #252b42;
+
+    @media (max-width: 750px) {
+      font-size: 40px;
+    }
   }
 
   & p {
@@ -68,6 +80,10 @@ const Content = styled.div`
     align-items: center;
     margin-top: 3.9rem;
     gap: 3rem;
+
+    @media (max-width: 750px) {
+      flex-direction: column;
+    }
 
     & button {
       background: #b73225;

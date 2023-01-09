@@ -120,7 +120,6 @@ const ProductPage: NextPage = () => {
   return (
     <>
       <Head>
-        <h2>SHOP</h2>
         {/* <Title>Shop</Title>
         <Location>
           <span>Home</span>

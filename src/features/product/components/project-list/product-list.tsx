@@ -34,6 +34,7 @@ const ToolBar = styled.div`
 
   @media (max-width: 750px) {
     flex-direction: column;
+    gap: 2rem;
     align-items: center;
   }
 `;
@@ -73,6 +74,10 @@ const Views = styled.div`
   align-items: center;
   letter-spacing: 0.2px;
 
+  @media (max-width: 750px) {
+    display: none;
+  }
+
   /* second-text-color */
 
   color: #737373;
@@ -99,7 +104,7 @@ const SelectContainer = styled.select`
   font-size: 14px;
   line-height: 28px;
   /* identical to box height, or 200% */
-
+  cursor: pointer;
   letter-spacing: 0.2px;
 
   /* second-text-color */

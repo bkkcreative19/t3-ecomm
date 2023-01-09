@@ -45,6 +45,7 @@ const Subtotal = styled.h4`
 `;
 const Remove = styled.p`
   font-size: 1.4rem;
+  cursor: pointer;
 `;
 
 const Content = styled.div`
@@ -61,43 +62,35 @@ const Content = styled.div`
 
 export function CartItem({ cartItem, qty, id }: any) {
   const utils = trpc.useContext();
-  const addQuantityMutation = trpc.cart.addQuantity.useMutation({});
-  const minusQuantityMutation = trpc.cart.minusQuantity.useMutation();
-  // const handleCheckout = async () => {
-  //   const { data } = await axios.post(
-  //     "http://localhost:5000/create-checkout-session",
-  //     {
-  //       cartItems: cart,
-  //     }
-  //   );
 
-  const handleUpdateQty = async (id: any, op: string) => {
-    if (op === "add") {
-      await addQuantityMutation.mutateAsync(id);
-    } else {
-      await minusQuantityMutation.mutateAsync(id);
-    }
+  const updateQuantityMutation = trpc.cart.updateQuantity.useMutation({});
+  const updateCartTotalMutation = trpc.cart.updateCartTotal.useMutation();
+  const deleteCartItemMutation = trpc.cart.deleteCartItem.useMutation();
+
+  const handleUpdateQty = async (id: any, operation: number) => {
+    await updateQuantityMutation.mutateAsync({ id, operation });
+    utils.cart.invalidate();
+  };
+
+  const handleRemoveItem = async () => {
+    await deleteCartItemMutation.mutateAsync(id);
+    await updateCartTotalMutation.mutateAsync(-1);
     utils.cart.invalidate();
   };
 
   return (
     <CartItemStyles>
-      <Image src={cartItem.imageURL} />
+      <Image src={cartItem.imageURL} alt="product image" />
       <Content>
-        {" "}
         <Title>{cartItem.title}</Title>
         <Price>${cartItem.price.toFixed(2)}</Price>
         <Qty>
-          <div onClick={() => handleUpdateQty(id, "subtract")}>-</div>
-          <p>
-            {addQuantityMutation.isLoading || minusQuantityMutation.isLoading
-              ? "...loading"
-              : qty}
-          </p>
-          <div onClick={() => handleUpdateQty(id, "add")}>+</div>
+          <div onClick={() => handleUpdateQty(id, -1)}>-</div>
+          <p>{updateQuantityMutation.isLoading ? "...loading" : qty}</p>
+          <div onClick={() => handleUpdateQty(id, +1)}>+</div>
         </Qty>
         <Subtotal>${(cartItem.price * qty).toFixed(2)}</Subtotal>
-        <Remove>Remove x</Remove>
+        <Remove onClick={handleRemoveItem}>Remove x</Remove>
       </Content>
     </CartItemStyles>
   );

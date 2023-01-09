@@ -8,7 +8,7 @@ import { trpc } from "../../utils/trpc";
 export default function ProductDetails() {
   const router = useRouter();
   const query: string = router.query.id as string;
-  const createCartMutation = trpc.cart.createCart.useMutation();
+  const updateCartTotalMutation = trpc.cart.updateCartTotal.useMutation();
   const createCartItemMutation = trpc.cart.createCartItem.useMutation();
 
   const { data: product } = trpc.product.getProductByTitle.useQuery(query);
@@ -20,6 +20,8 @@ export default function ProductDetails() {
     await createCartItemMutation.mutateAsync({
       productId: product?.id,
     });
+
+    await updateCartTotalMutation.mutateAsync(+1);
     // console.log(res);
   };
   // console.log(product);

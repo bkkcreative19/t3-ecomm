@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { trpc } from "../../../utils/trpc";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const cartRouter = router({
@@ -6,14 +7,6 @@ export const cartRouter = router({
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
       try {
-        // await ctx.prisma.cart.create({
-        //     data: {
-        // total: 0,
-        // userId: ctx.session?.user?.id,
-        // user: ctx.session?.user?
-        //   },
-        // });
-
         const cart = await ctx.prisma.cart.findFirst({
           where: {
             userId: ctx.session?.user?.id,
@@ -115,100 +108,62 @@ export const cartRouter = router({
     });
   }),
 
-  getCartTotal: publicProcedure.query(async ({ ctx }) => {
-    let total;
+  updateCartTotal: publicProcedure
+    .input(z.any())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.cart.update({
+        where: {
+          userId: ctx.session?.user?.id,
+        },
 
-    const cartItems = await ctx.prisma.cart.findFirst({
+        data: {
+          total: {
+            increment: input,
+          },
+        },
+      });
+    }),
+
+  updateQuantity: publicProcedure
+    .input(z.any())
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const updatedItem = await ctx.prisma.cartItem.update({
+          where: {
+            id: input.id,
+          },
+
+          data: {
+            quantity: {
+              increment: input.operation,
+            },
+          },
+        });
+
+        return updatedItem;
+      } catch (err) {}
+    }),
+
+  deleteCart: publicProcedure.mutation(async ({ ctx }) => {
+    const item = await ctx.prisma.cart.findFirst({
       where: {
         userId: ctx.session?.user?.id,
       },
-
-      include: {
-        cartItems: {
-          include: {
-            product: true,
-          },
-        }, // All posts where authorId == 20
-      },
     });
 
-    console.log(cartItems);
-
-    return total;
+    await ctx.prisma.cart.delete({
+      where: {
+        id: item?.id,
+      },
+    });
   }),
 
-  addQuantity: publicProcedure
+  deleteCartItem: publicProcedure
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
-      console.log(input);
-      try {
-        const updatedItem = await ctx.prisma.cartItem.update({
-          where: {
-            id: input,
-          },
-
-          data: {
-            quantity: {
-              increment: 1,
-            },
-          },
-        });
-
-        return updatedItem;
-      } catch (err) {}
-    }),
-
-  minusQuantity: publicProcedure
-    .input(z.any())
-    .mutation(async ({ ctx, input }) => {
-      console.log(input);
-
-      try {
-        const item = await ctx.prisma.cartItem.findFirst({
-          where: {
-            id: input,
-          },
-        });
-
-        if (item?.quantity === 1) {
-          console.log("de");
-          await ctx.prisma.cartItem.delete({
-            where: {
-              id: input,
-            },
-          });
-          return;
-        }
-
-        console.log("yay");
-        const updatedItem = await ctx.prisma.cartItem.update({
-          where: {
-            id: input,
-          },
-
-          data: {
-            quantity: {
-              decrement: 1,
-            },
-          },
-        });
-
-        return updatedItem;
-      } catch (err) {}
-    }),
-
-  deleteCart: publicProcedure
-    .input(z.any())
-    .mutation(async ({ ctx, input }) => {
-      const item = await ctx.prisma.cart.findFirst({
+      await ctx.prisma.cartItem.delete({
         where: {
           id: input,
-        },
-      });
-
-      await ctx.prisma.cart.delete({
-        where: {
-          id: item?.id,
         },
       });
     }),
