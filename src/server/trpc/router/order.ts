@@ -7,20 +7,20 @@ export const orderRouter = router({
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
       console.log("yay", ctx);
-      // try {
-      //   await ctx.prisma.order.create({
-      //     data: {
-      //       total: input.amount,
-      //       user: {
-      //         connect: {
-      //           id: ctx.session?.user?.id,
-      //         },
-      //       },
-      //     },
-      //   });
-      // } catch (err) {
-      //   console.log(err);
-      // }
+      try {
+        await ctx.prisma.order.create({
+          data: {
+            total: input.amount,
+            user: {
+              connect: {
+                id: ctx.session?.user?.id,
+              },
+            },
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }),
 
   getOrders: publicProcedure.query(async ({ ctx }) => {

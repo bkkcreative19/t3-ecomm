@@ -41,6 +41,7 @@ export const stripeRouter = router({
         mode: "payment",
         success_url: redirectURL + "/profile",
         cancel_url: redirectURL + "?status=cancel",
+        client_reference_id: ctx.session?.user?.id,
       });
       // const params: Stripe.Checkout.SessionCreateParams = {
       //   submit_type: "donate",

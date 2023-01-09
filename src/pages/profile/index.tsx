@@ -16,7 +16,6 @@ const ProfileStyles = styled.div``;
 
 const ProfilePage: NextPage = () => {
   const { data: orders } = trpc.order.getOrders.useQuery();
-  console.log(orders);
   const { data: session } = useSession();
   return (
     <ProfileStyles>
@@ -35,20 +34,19 @@ const ProfilePage: NextPage = () => {
             </TableHead>
             <TableBody>
               {orders?.map((order: any) => (
-                // <TableRow
-                //   key={row.name}
-                //   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                // >
-                //   <TableCell component="th" scope="row">
-                //     {row.name}
-                //   </TableCell>
-                //   <TableCell align="right">{row.calories}</TableCell>
-                //   <TableCell align="right">{row.carbs}</TableCell>
-                //   <TableCell align="right">
-                //     <button>Details</button>
-                //   </TableCell>
-                // </TableRow>
-                <></>
+                <TableRow
+                  key={order.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {order.id}
+                  </TableCell>
+                  {/* <TableCell align="right">{order.createdAt}</TableCell> */}
+                  <TableCell align="right">{order.total}</TableCell>
+                  <TableCell align="right">
+                    <button>Details</button>
+                  </TableCell>
+                </TableRow>
               ))}
             </TableBody>
           </Table>

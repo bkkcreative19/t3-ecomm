@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 // import { env } from "../../env/server.mjs";
 import { prisma } from "../../server/db/client";
 // import type Stripe from "stripe";
-
+import { authOptions } from "../api/auth/[...nextauth]";
+import { unstable_getServerSession } from "next-auth/next";
 import { stripe } from "../../server/stripe/client";
 import { appRouter } from "../../server/trpc/router/_app";
 import { getServerAuthSession } from "../../server/common/get-server-auth-session";
@@ -29,8 +30,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const ctx = await createContext({ req, res });
-  const caller = appRouter.createCaller(ctx);
+  // const ctx = await createContext({ req, res });
+  // const caller = appRouter.createCaller(ctx);
 
   if (req.method === "POST") {
     const buf = await buffer(req);
@@ -47,9 +48,30 @@ export default async function handler(
 
       // Handle the event
       switch (event.type) {
-        case "payment_intent.succeeded":
-          // await caller.order.createOrder(event.data.object);
-          console.log("event");
+        // case "payment_intent.succeeded":
+
+        case "checkout.session.completed":
+          const obj: any = event.data.object;
+
+          await prisma.cart.delete({
+            where: {
+              userId: obj.client_reference_id,
+            },
+          });
+
+          await prisma.order.create({
+            data: {
+              total: obj.amount_total,
+              user: {
+                connect: {
+                  id: obj.client_reference_id,
+                },
+              },
+            },
+          });
+          break;
+        // await caller.order.createOrder(event.data.object);
+        // console.log("event");
         default:
         // Unexpected event type
       }
