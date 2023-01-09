@@ -1,21 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 // import { env } from "../../env/server.mjs";
 import { prisma } from "../../server/db/client";
-// import type Stripe from "stripe";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { unstable_getServerSession } from "next-auth/next";
+
 import { stripe } from "../../server/stripe/client";
-import { appRouter } from "../../server/trpc/router/_app";
-import { getServerAuthSession } from "../../server/common/get-server-auth-session";
+
 import type Stripe from "stripe";
-import { createContext } from "../../server/trpc/context";
+
 import { buffer } from "micro";
-// import {
-//   handleInvoicePaid,
-//   handleSubscriptionCanceled,
-//   handleSubscriptionCreatedOrUpdated,
-// } from "../../server/stripe/stripe-webhook-handlers";
-// import { stripe } from "../../server/stripe/client";
 
 // Stripe requires the raw body to construct the event.
 export const config = {
