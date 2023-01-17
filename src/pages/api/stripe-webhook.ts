@@ -5,7 +5,7 @@ import { prisma } from "../../server/db/client";
 import { stripe } from "../../server/stripe/client";
 
 import type Stripe from "stripe";
-
+import { trpc } from "../../utils/trpc";
 import { buffer } from "micro";
 
 // Stripe requires the raw body to construct the event.
@@ -21,7 +21,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const ctx = await createContext({ req, res });
+  const ctx = trpc.useContext();
   // const caller = appRouter.createCaller(ctx);
 
   if (req.method === "POST") {
@@ -44,9 +44,10 @@ export default async function handler(
         case "checkout.session.completed":
           const obj: any = event.data.object;
 
+          console.log(obj);
           await prisma.cart.delete({
             where: {
-              userId: obj.client_reference_id,
+              userId: ctx.auth.getSession.getData()?.user?.id,
             },
           });
 
@@ -61,8 +62,7 @@ export default async function handler(
             },
           });
           break;
-        // await caller.order.createOrder(event.data.object);
-        // console.log("event");
+
         default:
         // Unexpected event type
       }

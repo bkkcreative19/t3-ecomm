@@ -39,16 +39,12 @@ The [**T3 Stack**](https://create.t3.gg/) is a web development stack made by [Th
 - prisma
 - public
 - src
-  |- components
   |- env
-  |- layout
-  |- motions
+  |- features
   |- pages
-  |- schema
   |- server
   |- styles
   |- types
-  |- ui
   |- utils
 ```
 
@@ -83,12 +79,12 @@ ultra install
 > 🚧 The environment variables must match the following [schema](https://github.com/pheralb/slug/blob/main/src/env/schema.mjs#L8).
 
 ```bash
-# Planetscale DB URL:
+# Postgres DB URL:
 DATABASE_URL:
 
-# Github OAuth secrets:
-GITHUB_ID:
-GITHUB_CLIENT_SECRET:
+# Google OAuth secrets:
+GOOGLE_ID:
+GOOGLE_CLIENT_SECRET:
 
 # Next Auth config:
 NEXTAUTH_SECRET:
@@ -104,12 +100,6 @@ NEXTAUTH_URL:
 - [In the dev branch, click on "Connect" and select "Prisma". Now you have the DATABASE_URL](https://planetscale.com/docs/concepts/connection-strings#creating-a-password).
 
 > 🚧 The environment variable in the dev branch is not the same as main. When you deploy your app to production, in the environment variables change DATABASE_URL to the main variable.
-
-**Github OAuth:**
-
-- [Click here to create new Github OAuth app](https://github.com/settings/applications/new).
-- Go to "Client secrets" and generate new client secret and and paste it into GITHUB_CLIENT_SECRET env.
-- Copy the Client ID and paste it into GITHUB_ID env.
 
 **Next Auth:**
 
@@ -130,10 +120,6 @@ npx prisma studio
 ```
 
 😊 Contributing:
-
-<a href="https://github.com/pheralb/slug/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=pheralb/slug" />
-</a>
 
 <p></p>
 

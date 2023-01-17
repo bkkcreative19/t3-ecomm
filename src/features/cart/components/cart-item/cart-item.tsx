@@ -65,7 +65,19 @@ export function CartItem({ cartItem, qty, id }: any) {
 
   const updateQuantityMutation = trpc.cart.updateQuantity.useMutation({});
   const updateCartTotalMutation = trpc.cart.updateCartTotal.useMutation();
-  const deleteCartItemMutation = trpc.cart.deleteCartItem.useMutation();
+  const deleteCartItemMutation = trpc.cart.deleteCartItem.useMutation({
+    onMutate: () => {
+      // utils.cart.getCart.cancel();
+
+      const optimisticUpdate = utils.cart.getCart.getData();
+
+      if (optimisticUpdate) {
+        //  utils.cart.getCart.setData(optimisticUpdate);
+      }
+
+      console.log(optimisticUpdate);
+    },
+  });
 
   const handleUpdateQty = async (id: any, operation: number) => {
     await updateQuantityMutation.mutateAsync({ id, operation });

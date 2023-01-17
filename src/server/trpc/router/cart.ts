@@ -3,40 +3,27 @@ import { trpc } from "../../../utils/trpc";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const cartRouter = router({
-  createCart: publicProcedure
+  createCartItem: protectedProcedure
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
-      try {
-        const cart = await ctx.prisma.cart.findFirst({
-          where: {
-            userId: ctx.session?.user?.id,
-          },
-        });
-
-        if (cart) {
-          return;
-        }
-
-        const res: any = await ctx.prisma.cart.create({
+      async function createCartItem(cart: any) {
+        await ctx.prisma.cartItem.create({
           data: {
-            total: 0,
-            user: {
+            cart: {
               connect: {
-                id: ctx.session?.user?.id,
+                id: cart.id,
               },
             },
+            product: {
+              connect: {
+                id: input.productId,
+              },
+            },
+            quantity: 1,
           },
         });
-
-        return res;
-      } catch (err) {
-        console.log(err);
       }
-    }),
 
-  createCartItem: publicProcedure
-    .input(z.any())
-    .mutation(async ({ ctx, input }) => {
       try {
         const cart = await ctx.prisma.cart.findFirst({
           where: {
@@ -44,24 +31,8 @@ export const cartRouter = router({
           },
         });
 
-        console.log(cart);
-
         if (cart) {
-          await ctx.prisma.cartItem.create({
-            data: {
-              cart: {
-                connect: {
-                  id: cart.id,
-                },
-              },
-              product: {
-                connect: {
-                  id: input.productId,
-                },
-              },
-              quantity: 1,
-            },
-          });
+          await createCartItem(cart);
         } else {
           const res: any = await ctx.prisma.cart.create({
             data: {
@@ -74,26 +45,12 @@ export const cartRouter = router({
             },
           });
 
-          await ctx.prisma.cartItem.create({
-            data: {
-              cart: {
-                connect: {
-                  id: res.id,
-                },
-              },
-              product: {
-                connect: {
-                  id: input.productId,
-                },
-              },
-              quantity: 1,
-            },
-          });
+          await createCartItem(res);
         }
       } catch (err) {}
     }),
 
-  getCart: publicProcedure.query(async ({ ctx }) => {
+  getCart: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.cart.findFirst({
       where: {
         userId: ctx.session?.user?.id,
@@ -108,7 +65,7 @@ export const cartRouter = router({
     });
   }),
 
-  updateCartTotal: publicProcedure
+  updateCartTotal: protectedProcedure
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.cart.update({
@@ -124,7 +81,7 @@ export const cartRouter = router({
       });
     }),
 
-  updateQuantity: publicProcedure
+  updateQuantity: protectedProcedure
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
       try {
@@ -144,7 +101,7 @@ export const cartRouter = router({
       } catch (err) {}
     }),
 
-  deleteCart: publicProcedure.mutation(async ({ ctx }) => {
+  deleteCart: protectedProcedure.mutation(async ({ ctx }) => {
     const item = await ctx.prisma.cart.findFirst({
       where: {
         userId: ctx.session?.user?.id,
@@ -158,7 +115,7 @@ export const cartRouter = router({
     });
   }),
 
-  deleteCartItem: publicProcedure
+  deleteCartItem: protectedProcedure
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.cartItem.delete({

@@ -136,12 +136,19 @@ const Button = styled.button`
   /* light-text-color */
 
   color: #ffffff;
+
+  &:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    opacity: 0.3;
+  }
 `;
 
-export function ProductInfo({ data, handleAddToCart }: any) {
+export function ProductInfo({ data, handleAddToCart, isDisabled }: any) {
   const product = data;
   // const { addToCart, updateCartTotal } = useStore();
-
+  console.log(isDisabled);
   if (!product) {
     return <h1>loading...</h1>;
   }
@@ -166,7 +173,9 @@ export function ProductInfo({ data, handleAddToCart }: any) {
         </Availablity>
 
         <Description>{product.description}</Description>
-        <Button onClick={handleAddToCart}>Add to Cart</Button>
+        <Button disabled={isDisabled} onClick={handleAddToCart}>
+          Add to Cart
+        </Button>
       </Content>
     </ProductInfoStyles>
   );

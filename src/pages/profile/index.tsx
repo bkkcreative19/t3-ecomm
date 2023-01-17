@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+
 import styled from "styled-components";
 import { Layout } from "../../features/ui/layout";
 import { trpc } from "../../utils/trpc";
@@ -16,20 +17,37 @@ const ProfileStyles = styled.div``;
 
 const ProfilePage: NextPage = () => {
   const { data: orders } = trpc.order.getOrders.useQuery();
+
   const { data: session } = useSession();
+
+  // if (!session) {
+  //   signIn();
+  // }
+
+  const yay = orders && orders[0]?.createdAt;
+
+  const date = new Date(yay!);
+
   return (
     <ProfileStyles>
       <Layout>
-        {" "}
-        <h1>My Orders</h1>
+        <h1
+          style={{ fontSize: "2rem", marginTop: "4rem", marginBottom: "3rem" }}
+        >
+          My Orders
+        </h1>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell align="right">Date</TableCell>
-                <TableCell align="right">Total</TableCell>
-                <TableCell align="right"></TableCell>
+                <TableCell style={{ fontSize: "1.2rem" }}>ID</TableCell>
+                <TableCell style={{ fontSize: "1.2rem" }} align="center">
+                  Date
+                </TableCell>
+                <TableCell style={{ fontSize: "1.2rem" }} align="right">
+                  Total
+                </TableCell>
+                {/* <TableCell align="right"></TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -38,14 +56,22 @@ const ProfilePage: NextPage = () => {
                   key={order.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    style={{ fontSize: "1.5rem" }}
+                    component="th"
+                    scope="row"
+                  >
                     {order.id}
                   </TableCell>
-                  {/* <TableCell align="right">{order.createdAt}</TableCell> */}
-                  <TableCell align="right">{order.total}</TableCell>
-                  <TableCell align="right">
-                    <button>Details</button>
+                  <TableCell style={{ fontSize: "1.5rem" }} align="center">
+                    {date.toDateString()}
                   </TableCell>
+                  <TableCell style={{ fontSize: "1.5rem" }} align="right">
+                    ${formatNumber(order.total).toFixed(2)}
+                  </TableCell>
+                  {/* <TableCell style={{ fontSize: "1.5rem" }} align="right">
+                    <button>Details</button>
+                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>
@@ -57,3 +83,11 @@ const ProfilePage: NextPage = () => {
 };
 
 export default ProfilePage;
+
+function formatNumber(num: any) {
+  let newNum: any = num.toString();
+
+  newNum = newNum.substring(0, newNum.length - 2);
+
+  return Number(newNum);
+}

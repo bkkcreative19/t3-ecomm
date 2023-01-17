@@ -76,7 +76,7 @@ const LoadingContainer = styled.div`
 `;
 
 const CartPage: NextPage = () => {
-  const { data: cart, isLoading } = trpc.cart.getCart.useQuery();
+  const { data: cart, isLoading, isFetching } = trpc.cart.getCart.useQuery();
 
   const checkoutMutation = trpc.stripe.createCheckout.useMutation();
 

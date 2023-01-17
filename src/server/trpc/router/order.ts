@@ -3,7 +3,7 @@ import { trpc } from "../../../utils/trpc";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const orderRouter = router({
-  createOrder: publicProcedure
+  createOrder: protectedProcedure
     .input(z.any())
     .mutation(async ({ ctx, input }) => {
       console.log("yay", ctx);
@@ -23,7 +23,7 @@ export const orderRouter = router({
       }
     }),
 
-  getOrders: publicProcedure.query(async ({ ctx }) => {
+  getOrders: protectedProcedure.query(async ({ ctx }) => {
     const res = await ctx.prisma.order.findMany({
       where: {
         userId: ctx.session?.user?.id,

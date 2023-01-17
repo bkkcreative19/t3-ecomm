@@ -16,11 +16,12 @@ export const stripeRouter = router({
             currency: "usd",
             product_data: {
               images: [item.product.imageURL],
+              description: item.product.description,
               name: item.product.title,
             },
             unit_amount: item.product.price * 100,
           },
-          description: item.product.description,
+
           quantity: item.quantity,
         };
 
@@ -37,7 +38,7 @@ export const stripeRouter = router({
         line_items: lineItems,
         mode: "payment",
         success_url: redirectURL + "/profile",
-        cancel_url: redirectURL + "?status=cancel",
+        cancel_url: redirectURL + "/cart",
         client_reference_id: ctx.session?.user?.id,
       });
       // const params: Stripe.Checkout.SessionCreateParams = {

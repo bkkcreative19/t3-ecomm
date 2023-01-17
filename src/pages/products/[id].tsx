@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "../../features/ui/layout";
 
 import { useRouter } from "next/router";
@@ -7,30 +7,47 @@ import { trpc } from "../../utils/trpc";
 
 export default function ProductDetails() {
   const router = useRouter();
+  const ctx = trpc.useContext();
   const query: string = router.query.id as string;
   const updateCartTotalMutation = trpc.cart.updateCartTotal.useMutation();
-  const createCartItemMutation = trpc.cart.createCartItem.useMutation();
+  const createCartItemMutation = trpc.cart.createCartItem.useMutation({
+    onSettled: () => {
+      ctx.cart.getCart.invalidate();
+    },
+  });
 
-  const { data: product } = trpc.product.getProductByTitle.useQuery(query);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const { data: product } = trpc.product.getProductByTitle.useQuery(
+    query || ""
+  );
+  const { data: cart } = trpc.cart.getCart.useQuery();
 
   const handleAddToCart = async () => {
-    // console.log("yay");
+    const cartItem = cart?.cartItems.find(
+      (item: any) => item.productId === product?.id
+    );
 
-    // const res = await createCartMutation.mutateAsync("awf");
-    await createCartItemMutation.mutateAsync({
-      productId: product?.id,
-    });
+    if (!cartItem) {
+      router.push("/cart");
 
-    await updateCartTotalMutation.mutateAsync(+1);
-    // console.log(res);
+      await createCartItemMutation.mutateAsync({
+        productId: product?.id,
+      });
+
+      await updateCartTotalMutation.mutateAsync(+1);
+    }
   };
-  // console.log(product);
-
-  // const { data } = useProduct(router.query.id);
 
   return (
     <>
-      <ProductInfo handleAddToCart={handleAddToCart} data={product} />
+      <ProductInfo
+        isDisabled={cart?.cartItems.some(
+          (item: any) => item.productId === product?.id
+        )}
+        handleAddToCart={handleAddToCart}
+        data={product}
+      />
     </>
   );
 }
